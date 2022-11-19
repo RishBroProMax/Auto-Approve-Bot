@@ -1,0 +1,103 @@
+{
+
+    "name": "Auto-Approved-Bot",
+
+    "description": "Iam Auto-Approved-Bot @pr0fess0r_99",
+
+    "keywords": [
+
+        "Auto",
+
+        "Approved",
+
+        "Group",
+
+        "Invite",
+
+        "Link",
+
+        "Bot"
+
+    ],
+
+    "website": "https://youtube.com/channel/@Rish_Bro",
+
+    "repository": "https://github.com/PR0FESS0R-99/Auto-Approved-Bot",
+
+
+
+    "env": {
+
+        "API_ID": {
+
+            "description": "Your APP ID From https://youtu.be/5eEsvLAKVc0 or @MT_MyTelegramOrg_Bot",
+
+            "value": ""
+
+        },
+
+        "API_HASH": {
+
+            "description": "Your API Hash From my.telegram.org",
+
+            "value": ""
+
+        },
+
+        "BOT_TOKEN": {
+
+            "description": "Your Bot Token From @BotFather",
+
+            "value": ""
+
+        },
+
+        "CHAT_ID": {
+
+            "description": "Get From @emFsub_Bot",
+
+            "value": ""
+
+        },
+
+        "APPROVED_WELCOME": {
+
+            "description": "APPROVED_WELCOME On Or Off",
+
+            "value": "on"
+
+        },
+
+        "APPROVED_WELCOME_TEXT": {
+
+            "description": "APPROVED_WELCOME_TEXT : Welcome Text",
+
+            "value": "Hello {mention}\n\n I m Simple And Fast Auto Approved Bot. \n\n 🔥Powerd By Emo Network \n 🚀 Fast Response \n 💫 Simple API \n ☘️ Friendly Bot \n  📺 Channel Support \n\n ◈─────────────◈ \n\n ⚡️ Powerd By @EmoBotDevolopers \n 🧑‍💻 Devoloper : @ImRishmika \n\n "
+
+        }
+
+    },
+
+    "buildpacks": [
+
+        {
+
+            "url": "heroku/python"
+
+        }
+
+    ],
+
+    "formation": {
+
+        "worker": {
+
+            "quantity": 1,
+
+            "size": "free"
+
+        }
+
+    }
+
+}
