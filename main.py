@@ -20,7 +20,7 @@ pr0fess0r_99=Client(
 
 CHAT_ID = [int(pr0fess0r_99) for pr0fess0r_99 in environ.get("CHAT_ID", None).split()]
 
-TEXT = environ.get("APPROVED_WELCOME_TEXT", "👋Hello {mention}\nWelcome To {title}\n\nYour Auto Approved \n\n 🚀 Powerd By @EmoBotDevolopers )
+TEXT = environ.get("APPROVED_WELCOME_TEXT", "👋Hello {mention}\nWelcome To {title}\n\nYour Auto Approved \n\n 🚀 Powerd By @EmoBotDevolopers" )
 
 APPROVED = environ.get("APPROVED_WELCOME", "on").lower()
 
