@@ -1,59 +1,203 @@
-
-
-from os import environ
-
-from pyrogram import Client, filters
-
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, User, ChatJoinRequest
-
-pr0fess0r_99=Client(
-
-    "Auto Approved Bot",
-
-    bot_token = environ["BOT_TOKEN"],
-
-    api_id = int(environ["API_ID"]),
-
-    api_hash = environ["API_HASH"]
-
+from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
+from pyrogram import filters, Client, errors, enums
+from pyrogram.errors import UserNotParticipant
+from pyrogram.errors.exceptions.flood_420 import FloodWait
+from database import add_user, add_group, all_users, all_groups, users, remove_user
+import random, asyncio
+from configs import cfg
+    
+app = Client(
+    "approver",
+    api_id=cfg.API_ID,
+    api_hash=cfg.API_HASH,
+    bot_token=cfg.BOT_TOKEN
 )
 
-CHAT_ID = [int(pr0fess0r_99) for pr0fess0r_99 in environ.get("CHAT_ID", None).split()]
+gif = [
+    'https://telegra.ph/file/c4ea3761bb73bab726334.jpg',
+    'https://telegra.ph/file/c4ea3761bb73bab726334.jpg',
+    'https://telegra.ph/file/c4ea3761bb73bab726334.jpg',
+    'https://telegra.ph/file/c4ea3761bb73bab726334.jpg',
+    'https://telegra.ph/file/c4ea3761bb73bab726334.jpg',
+    'https://telegra.ph/file/d340fbf28f412487c5750.jpg',
+    'https://telegra.ph/file/d340fbf28f412487c5750.jpg',
+    'https://telegra.ph/file/d5becc3a7c18f619bcd22.png',
+    'https://telegra.ph/file/d5becc3a7c18f619bcd22.png',
+    'https://telegra.ph/file/d5becc3a7c18f619bcd22.png',
+    'https://telegra.ph/file/d5becc3a7c18f619bcd22.png'
+]
 
-TEXT = environ.get("APPROVED_WELCOME_TEXT", "👋Hello {mention}\nWelcome To {title}\n\nYour Auto Approved \n\n 🚀 Powerd By @EmoBotDevolopers" )
 
-APPROVED = environ.get("APPROVED_WELCOME", "on").lower()
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Main process ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-@pr0fess0r_99.on_message(filters.private & filters.command(["start"]))
+@app.on_chat_join_request(filters.group | filters.channel & ~filters.private)
+async def approve(_, m : Message):
+    op = m.chat
+    kk = m.from_user
+    try:
+        add_group(m.chat.id)
+        await app.approve_chat_join_request(op.id, kk.id)
+        img = random.choice(gif)
+        await app.send_video(kk.id,img, "**Hello {}!\nWelcome To {}\n I m Auto Approve Bot.**".format(m.from_user.mention, m.chat.title))
+        add_user(kk.id)
+    except errors.PeerIdInvalid as e:
+        print("user isn't start bot(means group)")
+    except Exception as err:
+        print(str(err))    
+ 
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Start ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-async def start(client: pr0fess0r_99, message: Message):
+@app.on_message(filters.command("start"))
+async def op(_, m :Message):
+    try:
+        await app.get_chat_member(cfg.CHID, m.from_user.id) 
+        if m.chat.type == enums.ChatType.PRIVATE:
+            keyboard = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton("🗯 Channel", url="https://t.me/EmoBotDevolopers"),
+                        InlineKeyboardButton("💬 Support", url="https://t.me/EmoBotSupport")
+                    ],
+                    [
+                        InlineKeyboardButton("🧩 Repo 🧩", url="https://github.com/RishBropromax/Auto-Approve-Bot"),
+                        InlineKeyboardButton("💻 Devolopers 💻", url="https://t.me/ImRishmika")
+                    ],
+                    [
+                        InlineKeyboardButton("➕ Add me to your Chat ➕", url="https://t.me/emApprove_Bot?startgroup")
+                    ]
+                ]
+            )
+            add_user(m.from_user.id)
+            await m.reply_photo("https://telegra.ph/file/d5becc3a7c18f619bcd22.png", caption="**🦊 Hello {}!\nI'm an auto approve [Admin Join Requests]({}) Bot.\nI can approve users in Groups/Channels.Add me to your chat and promote me to admin with add members permission.\n\n 🔰 Powerd By [Emo Bot Devolopers](t.me/EmoBotSupport)**".format(m.from_user.mention, "https://t.me/telegram/153"), reply_markup=keyboard)
+    
+        elif m.chat.type == enums.ChatType.GROUP or enums.ChatType.SUPERGROUP:
+            keyboar = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton("💁‍♂️ Start me private 💁‍♂️", url="https://t.me/emApprove_Bot?start=start")
+                    ]
+                ]
+            )
+            add_group(m.chat.id)
+            await m.reply_text("**🦊 Hello {}!\n Write me private for more details**".format(m.from_user.first_name), reply_markup=keyboar)
+        print(m.from_user.first_name +" Is started Your Bot!")
 
-    approvedbot = await client.get_me() 
+    except UserNotParticipant:
+        key = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton("🍀 Check Again 🍀", "chk")
+                ]
+            ]
+        )
+        await m.reply_text("**⚠️Access Denied!⚠️\n\nPlease Join @{} to use me.If you joined click check again button to confirm.**".format(cfg.FSUB), reply_markup=key)
 
-    button = [[ InlineKeyboardButton("📦 Repo", url="https://github.com/RishbroProMax/Auto-Approve-Bot"), InlineKeyboardButton("Updates 📢", url="t.me/EmoBotDevolopers") ],
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ callback ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-              [ InlineKeyboardButton("➕️ Add Me To Your Chat ➕️", url=f"http://t.me/{approvedbot.username}?startgroup=botstart") ]]
+@app.on_callback_query(filters.regex("chk"))
+async def chk(_, cb : CallbackQuery):
+    try:
+        await app.get_chat_member(cfg.CHID, cb.from_user.id)
+        if cb.message.chat.type == enums.ChatType.PRIVATE:
+            keyboard = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton("🗯 Channel", url="https://t.me/EmoBotDevolopers"),
+                        InlineKeyboardButton("💬 Support", url="https://t.me/EmoBotSupport")
+                    ],
+                    [
+                        InlineKeyboardButton("🧩 Repo 🧩", url="https://github.com/RishBropromax/Auto-Approve-Bot"),
+                        InlineKeyboardButton("💻 Devolopers 💻", url="https://t.me/ImRishmika")
+                    ],
+                    [
+                        InlineKeyboardButton("➕ Add me to your Chat ➕", url="https://t.me/emApprove_Bot?startgroup")
+                    ]
+                ]
+            )
+            add_user(cb.from_user.id)
+            await cb.message.edit("**🦊 Hello {}!\nI'm an auto approve [Admin Join Requests]({}) Bot.\nI can approve users in Groups/Channels.Add me to your chat and promote me to admin with add members permission.\n\n 🔰 Powerd By [Emo Bot Devolopers](t.me/EmoBotDevolopers)**".format(cb.from_user.mention, "https://t.me/EmoBotDevolopers"), reply_markup=keyboard, disable_web_page_preview=True)
+        print(cb.from_user.first_name +" Is started Your Bot!")
+    except UserNotParticipant:
+        await cb.answer("🙅‍♂️ You are not joined to channel join and try again. 🙅‍♂️")
 
-    await client.send_message(chat_id=message.chat.id, text=f"**👋Hello {message.from_user.mention} Iam Auto Approver Join Request Bot Just [Add Me To Your Group Channnl](http://t.me/{approvedbot.username}?startgroup=botstart) \n\n ◈─────────────◈ \n\n🚀 Powerd By @EmoBotDevolopers \n 🧑‍💻 Devoloper : @ImRishmika \n\n ◈─────────────◈", reply_markup=InlineKeyboardMarkup(button), disable_web_page_preview=True)
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ info ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-@pr0fess0r_99.on_chat_join_request((filters.group | filters.channel) & filters.chat(CHAT_ID) if CHAT_ID else (filters.group | filters.channel))
+@app.on_message(filters.command("users") & filters.user(cfg.SUDO))
+async def dbtool(_, m : Message):
+    xx = all_users()
+    x = all_groups()
+    tot = int(xx + x)
+    await m.reply_text(text=f"""
+🍀 Chats Stats 🍀
+🙋‍♂️ Users : `{xx}`
+👥 Groups : `{x}`
+🚧 Total users & groups : `{tot}` """)
 
-async def autoapprove(client: pr0fess0r_99, message: ChatJoinRequest):
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Broadcast ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    chat=message.chat # Chat
+@app.on_message(filters.command("bcast") & filters.user(cfg.SUDO))
+async def bcast(_, m : Message):
+    allusers = users
+    lel = await m.reply_text("`⚡️ Processing...`")
+    success = 0
+    failed = 0
+    deactivated = 0
+    blocked = 0
+    for usrs in allusers.find():
+        try:
+            userid = usrs["user_id"]
+            #print(int(userid))
+            if m.command[0] == "bcast":
+                await m.reply_to_message.copy(int(userid))
+            success +=1
+        except FloodWait as ex:
+            await asyncio.sleep(ex.value)
+            if m.command[0] == "bcast":
+                await m.reply_to_message.copy(int(userid))
+        except errors.InputUserDeactivated:
+            deactivated +=1
+            remove_user(userid)
+        except errors.UserIsBlocked:
+            blocked +=1
+        except Exception as e:
+            print(e)
+            failed +=1
 
-    user=message.from_user # User
+    await lel.edit(f"✅Successfull to `{success}` users.\n❌ Faild to `{failed}` users.\n👾 Found `{blocked}` Blocked users \n👻 Found `{deactivated}` Deactivated users.")
 
-    print(f"{user.first_name} Joined 🤝") # Logs
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Broadcast Forward ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    await client.approve_chat_join_request(chat_id=chat.id, user_id=user.id)
+@app.on_message(filters.command("fcast") & filters.user(cfg.SUDO))
+async def fcast(_, m : Message):
+    allusers = users
+    lel = await m.reply_text("`⚡️ Processing...`")
+    success = 0
+    failed = 0
+    deactivated = 0
+    blocked = 0
+    for usrs in allusers.find():
+        try:
+            userid = usrs["user_id"]
+            #print(int(userid))
+            if m.command[0] == "fcast":
+                await m.reply_to_message.forward(int(userid))
+            success +=1
+        except FloodWait as ex:
+            await asyncio.sleep(ex.value)
+            if m.command[0] == "fcast":
+                await m.reply_to_message.forward(int(userid))
+        except errors.InputUserDeactivated:
+            deactivated +=1
+            remove_user(userid)
+        except errors.UserIsBlocked:
+            blocked +=1
+        except Exception as e:
+            print(e)
+            failed +=1
 
-    if APPROVED == "on":
+    await lel.edit(f"✅Successfull to `{success}` users.\n❌ Faild to `{failed}` users.\n👾 Found `{blocked}` Blocked users \n👻 Found `{deactivated}` Deactivated users.")
 
-        await client.send_message(chat_id=chat.id, text=TEXT.format(mention=user.mention, title=chat.title))
-
-    #   print("Welcome....")
-
-print("Auto Approved Bot Started...")
-
-pr0fess0r_99.run()
+print("Starting..")
+print("Checking Code Erorrs..!")
+print("Bot Running..")
+app.run()
