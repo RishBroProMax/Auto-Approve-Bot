@@ -13,6 +13,20 @@ app = Client(
     bot_token=cfg.BOT_TOKEN
 )
 
+ABOUT = """ 
+☃️**About This Bot**☃️
+
+💠Commands : [Click Here](https://telegra.ph/Auto-Join-Reqvest-Accpet-Bot-Commads-12-24)
+🍁Bot created by @EmoBotDevolopers
+📦Source Code : [Click Here](https://github.com/RishBropromax/Auto-Approve-Bot)
+☘️Framework : [Pyrogram](docs.pyrogram.org)
+🔰Language : [Python](www.python.org)
+🧑‍💻Developer : @ImRishmika
+🆘Support : [Emo Bot Support](https://t.me/EmoBotSupport)
+
+"""
+
+
 gif = [
     'https://telegra.ph/file/c4ea3761bb73bab726334.jpg',
     'https://telegra.ph/file/c4ea3761bb73bab726334.jpg',
@@ -45,6 +59,12 @@ async def approve(_, m : Message):
     except Exception as err:
         print(str(err))    
  
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ About ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@app.on_message(filters.command("about"))
+async def help(bot, message):
+  await message.reply_photo("https://telegra.ph/file/c4ea3761bb73bab726334.jpg",caption=ABOUT,reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(text="</> ємσ вσт ∂єνσℓσρєʀѕ", url="t.me/EmoBotDevolopers")]]))
+
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Start ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @app.on_message(filters.command("start"))
