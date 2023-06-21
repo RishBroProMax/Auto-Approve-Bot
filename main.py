@@ -6,10 +6,11 @@ from database import add_user, add_group, all_users, all_groups, users, remove_u
 import random, asyncio
 from configs import cfg
     
-    API_ID="14055090"
-    BOT_TOKEN="6235334259:AAFJLg1nCLYrBqoc8LtvsTDG_JOTIeMxK7I"
-    API_HASH="a46f7b439d0afa45b7a69fc450f754e9"
-    
+    API_ID="1490" #ApI ID Get it on my.telegram.org
+    BOT_TOKEN="6235334259:AAFJLtvsTDG_JOTIeMxK7I" #BOT Token Get In On @Botfather
+    API_HASH="a46f7b439d0afaa69fc450f754e9" #API Hash
+    BOT_USERNAME="" #without @ 
+ 
 app = Client(
     "approver",
     api_id=cfg.API_ID,
@@ -25,7 +26,7 @@ ABOUT = """
 📦Source Code : [Click Here](https://github.com/RishBropromax/Auto-Approve-Bot)
 ☘️Framework : [Pyrogram](docs.pyrogram.org)
 🔰Language : [Python](www.python.org)
-🧑‍💻Developer : @ImRishmika
+🧑‍💻Developer : @AboutRishmika
 🆘Support : [Emo Bot Support](https://t.me/EmoBotSupport)
 
 """
@@ -56,7 +57,7 @@ async def approve(_, m : Message):
         add_group(m.chat.id)
         await app.approve_chat_join_request(op.id, kk.id)
         img = random.choice(gif)
-        await app.send_video(kk.id,img, "✌**Hello {}!\n\n I m Auto Approve Bot.**\nI can approve users in Groups/Channels.Add me to your chat and promote me to admin with add members permission.\n\n⚡️Powerd By @EmoBotDevolopers ".format(m.from_user.mention, m.chat.title))
+        await app.send_video(kk.id,img, "✌**Hello {}!\n\n I m Auto Approve Bot.**\nI can approve users in Groups/Channels. Add me to your chat and promote me to admin with add members permission.\n\n⚡️Powerd By @EmoBotDevolopers ".format(m.from_user.mention, m.chat.title))
         add_user(kk.id)
     except errors.PeerIdInvalid as e:
         print("user isn't start bot(means group)")
@@ -98,12 +99,12 @@ async def op(_, m :Message):
             keyboar = InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("💁‍♂️ Start me private 💁‍♂️", url="https://t.me/emApprove_Bot?start=start")
+                        InlineKeyboardButton("💁‍♂️ Start me private 💁‍♂️", url="https://t.me/{BOT_USERNAME}?start=start")
                     ]
                 ]
             )
             add_group(m.chat.id)
-            await m.reply_text("**🦊 Hello {}!\n Write me private for more details**".format(m.from_user.first_name), reply_markup=keyboar)
+            await m.reply_text("*⚡️ Hello {}!\n Write me private for more details**".format(m.from_user.first_name), reply_markup=keyboar)
         print(m.from_user.first_name +" Is started Your Bot!")
 
     except UserNotParticipant:
@@ -131,15 +132,15 @@ async def chk(_, cb : CallbackQuery):
                     ],
                     [
                         InlineKeyboardButton("🧩 Repo 🧩", url="https://github.com/RishBropromax/Auto-Approve-Bot"),
-                        InlineKeyboardButton("💻 Devolopers 💻", url="https://t.me/ImRishmika")
+                        InlineKeyboardButton("💻 Devoloper 💻", url="https://t.me/AboutRishmika")
                     ],
                     [
-                        InlineKeyboardButton("➕ Add me to your Chat ➕", url="https://t.me/emApprove_Bot?startgroup")
+                        InlineKeyboardButton("➕ Add me to your Chat ➕", url="https://t.me/{BOT_USERNAME}?startgroup")
                     ]
                 ]
             )
             add_user(cb.from_user.id)
-            await cb.message.edit("**🦊 Hello {}!\n\nI m Auto Approve Bot.**\nI can approve users in Groups/Channels.Add me to your chat and promote me to admin with add members permission.\n\n⚡️Powerd By @EmoBotDevolopers**".format(cb.from_user.mention, "https://t.me/EmoBotDevolopers"), reply_markup=keyboard, disable_web_page_preview=True)
+            await cb.message.edit("**⚡️ Hello {}!\n\nI m Auto Approve Bot.**\nI can approve users in Groups/Channels. Add me to your chat and promote me to admin with add members permission.\n\n⚡️Powerd By @EmoBotDevolopers**".format(cb.from_user.mention, "https://t.me/EmoBotDevolopers"), reply_markup=keyboard, disable_web_page_preview=True)
         print(cb.from_user.first_name +" Is started Your Bot!")
     except UserNotParticipant:
         await cb.answer("🙅‍♂️ You are not joined to channel join and try again. 🙅‍♂️")
@@ -153,9 +154,13 @@ async def dbtool(_, m : Message):
     tot = int(xx + x)
     await m.reply_text(text=f"""
 🍀 Chats Stats 🍀
+
 🙋‍♂️ Users : `{xx}`
 👥 Groups : `{x}`
-🚧 Total users & groups : `{tot}` """)
+🚧 Total users & groups : `{tot}`
+💠 Programmer :- @AboutRishmika
+
+""")
 
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Broadcast ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
