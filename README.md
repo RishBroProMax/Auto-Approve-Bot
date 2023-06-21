@@ -8,10 +8,10 @@ The Fast And Simple Join Request Accpet Bot
 ## 📌 Important
 💠 Please Open Main.py And Edit API ID, API HASHA, BOT TOKEN, BOT USERNAME.
 
-> You Edit It You Have 1 more Step Dont Fill this Information In Heroku Only Give App Name And Deploy it.
-> Check Config.py And Edit SUDO Users,FSUB, LOG Channel.
->  We Add [⚡️Mongo DB](https://youtu.be/BQwWuyIgAn0) For You.
-> Enjoy My Telegram Bot 🎊🎉
+> You Edit It You Have 1 more Step Dont Fill this Information In Heroku Only Give App Name And Deploy it. \n
+> Check Config.py And Edit SUDO Users,FSUB, LOG Channel.\n
+>  We Add [⚡️Mongo DB](https://youtu.be/BQwWuyIgAn0) For You. \n
+> Enjoy My Telegram Bot 🎊🎉 \n
 
 ## ❤️ Credits 
 
