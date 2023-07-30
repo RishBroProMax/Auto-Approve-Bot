@@ -1,6 +1,2 @@
 pyrogram
-TgCrypto
-pymongo
-os
-random
-asyncio
+tgcrypto
